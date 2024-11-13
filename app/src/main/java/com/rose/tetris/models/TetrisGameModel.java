@@ -36,7 +36,7 @@ class TetrisGameModel implements GameModel {
     private final Handler mHandler = new Handler();
 
     private enum BrickType {
-        L(0), T(1), CHAIR(2), STICK(3), SQUARE(4);
+        L(0), T(1), Z(2), I(3), O(4);
         final int value;
 
         BrickType(int value) {
@@ -48,11 +48,11 @@ class TetrisGameModel implements GameModel {
                 case 1:
                     return T;
                 case 2:
-                    return CHAIR;
+                    return Z;
                 case 3:
-                    return STICK;
+                    return I;
                 case 4:
-                    return SQUARE;
+                    return O;
                 case 0:
                 default:
                     return L;
@@ -126,19 +126,19 @@ class TetrisGameModel implements GameModel {
                 mUpcomingPoints[3][1].type = PointType.BOX;
                 mUpcomingPoints[2][2].type = PointType.BOX;
                 break;
-            case CHAIR:
+            case Z:
                 mUpcomingPoints[1][1].type = PointType.BOX;
                 mUpcomingPoints[2][1].type = PointType.BOX;
                 mUpcomingPoints[2][2].type = PointType.BOX;
                 mUpcomingPoints[3][2].type = PointType.BOX;
                 break;
-            case STICK:
+            case I:
                 mUpcomingPoints[0][1].type = PointType.BOX;
                 mUpcomingPoints[1][1].type = PointType.BOX;
                 mUpcomingPoints[2][1].type = PointType.BOX;
                 mUpcomingPoints[3][1].type = PointType.BOX;
                 break;
-            case SQUARE:
+            case O:
                 mUpcomingPoints[1][1].type = PointType.BOX;
                 mUpcomingPoints[1][2].type = PointType.BOX;
                 mUpcomingPoints[2][1].type = PointType.BOX;
@@ -183,13 +183,17 @@ class TetrisGameModel implements GameModel {
                 mIsGamePaused.set(true);
                 return;
             }
+            int dem =0;
             int y = mFallingPoints.stream().mapToInt(p -> p.y).max().orElse(-1);
             while (y >= 0) {
                 boolean isScored = true;
                 for (int i = 0; i < PLAYING_AREA_WIDTH; i++) {
                     Point point = getPlayingPoint(i, y);
                     if (point.type == PointType.EMPTY) {
-                        isScored = false;
+                        dem++;
+                    }
+                    if(dem>1){
+                        isScored =false;
                         break;
                     }
                 }
